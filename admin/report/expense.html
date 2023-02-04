@@ -1,0 +1,99 @@
+<style>
+    table td,table th{
+        padding: 3px !important;
+    }
+</style>
+<div class="card card-primary card-outline">
+    <div class="card-header">
+        <h5 class="card-title">Expense Report</h5>
+    </div>
+    <div class="card-body">
+        <form id="filter-form">
+            <div class="row align-items-end">
+                <div class="form-group col-md-3">
+                    <label for="date_start">Date Start</label>
+                    <input type="date" class="form-control form-control-sm" name="date_start" value="">
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="date_start">Date End</label>
+                    <input type="date" class="form-control form-control-sm" name="date_end" value="">
+                </div>
+                <div class="form-group col-md-1">
+                    <button class="btn btn-flat btn-block btn-primary btn-sm"><i class="fa fa-filter"></i> Filter</button>
+                </div>
+                <div class="form-group col-md-1">
+                    <button class="btn btn-flat btn-block btn-success btn-sm" type="button" id="printBTN"><i class="fa fa-print"></i> Print</button>
+                </div>
+            </div>
+        </form>
+        <hr>
+        <div id="printable">
+            <div>
+                <h4 class="text-center m-0"></h4>
+                <h3 class="text-center m-0"><b>Expense Report</b></h3>
+                <hr style="width:15%">
+                <p class="text-center m-0">Date Between</p>
+                <hr>
+            </div>
+            <table class="table table-bordered">
+                <colgroup>
+                    <col width="5%">                
+                    <col width="20%">                
+                    <col width="25%">                
+                    <col width="15%">                
+                    <col width="35%">                
+                </colgroup>
+                <thead>
+                    <tr class="bg-gray-light">
+                        <th class="text-center">#</th>
+                        <th>Entry DateTime</th>
+                        <th>Category</th>
+                        <th>Amount</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-center"><?php echo $i++ ?></td>
+                        <td class="text-right"><?php echo number_format($row['amount']) ?></td>
+                    </tr>
+                    <tr>
+                        <td class="text-center" colspan="5">No Data...</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td class="text-right px-3" colspan="3"><b>Total</b></td>
+                        <td class="text-right"><b></b></td>
+                        <td class="bg-gray"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    $(function(){
+        $('#filter-form').submit(function(e){
+            e.preventDefault()
+            location.href = "./?page=reports/budget&date_start="+$('[name="date_start"]').val()+"&date_end="+$('[name="date_end"]').val()
+        })
+
+        $('#printBTN').click(function(){
+            var rep = $('#printable').clone();
+            var ns = $('head').clone();
+            start_loader()
+            rep.prepend(ns)
+            var nw = window.document.open('','_blank','width=900,height=600')
+                nw.document.write(rep.html())
+                nw.document.close()
+                setTimeout(function(){
+                    nw.print()
+                    setTimeout(function(){
+                        nw.close()
+                        end_loader()
+                    },500)
+                },500)
+        })
+    })
+</script>
